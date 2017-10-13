@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="utf-8"/>
@@ -19,6 +19,7 @@
 </head>
 
 <body>
+<form action="#" th:action="@{/saveform}" method="post">
   <div class="">
   </div>
   <div class="wrapper p15">
@@ -81,7 +82,7 @@
             </div>
             <div id="editor"></div>
             <div class="text-right">
-              <button class="btn btn-primary" id="signform">Sign Form</button>
+              <input type="submit" class="btn btn-primary" id="signform" value="Sign Form"/>
             </div>
           </div>
         </div>
@@ -217,6 +218,7 @@
     });
     /*]]>*/
   </script>
+  </form>
 </body>
 
 </html>

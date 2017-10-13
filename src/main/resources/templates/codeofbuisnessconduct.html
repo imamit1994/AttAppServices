@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+  <style>
+  h2 {
+    text-align: center;
+	}
+	input[type=text],input[type="date"] {
+    background-color: transparent;
+    outline: none;
+    outline-style: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom-style: ridge;
+    padding: 3px 10px;
+}
+  </style>
+</head>
+<body>  
+<div class="container">
+	<div id="codeofbuisnessconduct">
+	<div class="row">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-8">
+		<div style="float:left;"><img src="image/ATTlogo.jpg" width="50px" height="50px"/></div>
+		<div style="padding-top: 5px;"><span>AT&#38;T Communication Inc.<br/>and participating Companies</span></div>
+		</div>
+		<div class="col-sm-2"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-8"><h2>AT&#38;T Code of Business Conduct</h2>
+		<h2>Acknowledgement Form</h2></div>
+		<div class="col-sm-2"></div>
+	</div>
+	<div style="height:50px;"></div>
+	<div class="row">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-8"><p>I have carefully read and reviewed the "AT&#38;T Code of Business Conduct", and will abide by the rules contained therein.</p> 
+		<p>I fully understand the provisions it contains and the requirement imposed. I further understand that violating any of the requirements identified in the AT&#38;T code of Business Conduct may subject me to disciplinary action, up to and including dismissal</p></div>
+		<div class="col-sm-2"></div>
+	</div>
+	<div style="height:100px;"></div>
+	<div class="row">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-8" style="border:1px solid;padding-top: 20px;padding-bottom: 30px;">
+			<h2>Restricted Proprietary Information</h2>
+			<span class="col-sm-2">Name(Printed):</span><input type="text" class="col-sm-10"/>
+			<!--<span class="col-sm-2">Signature:</span><input type="text" class="col-sm-6"><span class="col-sm-1">Date:</span><input type="text" class="col-sm-3">-->
+			<span class="col-sm-5">Temporary Worker/Contractor UUID:</span><input type="text" class="col-sm-7"/>
+			<span class="col-sm-4">Supervisor Name(Printed):</span><input type="text" class="col-sm-8"/>
+			<!--<span class="col-sm-3">Supervisor Signature:</span><input type="text" class="col-sm-5"><span class="col-sm-1">Date:</span><input type="text" class="col-sm-3"> -->
+			<span class="col-sm-2">Date:</span><input type="date" class="col-sm-10"/>
+		</div>
+		<div class="col-sm-2"></div>
+	</div>
+	<div id="editor"></div>
+	<div class="row">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-8" style="text-align:center;padding-top:30px;"><input type="submit" value="I Acknowlodge" id="acknowledgement"/></div>
+		<div class="col-sm-2"></div>
+	</div>
+	</div>
+</div>
+<script>
+var doc = new jsPDF();
+var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+};
+
+$('#acknowledgement').click(function () {   
+    doc.fromHTML($('#codeofbuisnessconduct').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+    doc.save('codeofbuinessconduct.pdf');
+});
+</script>
+</body>
+</html>
