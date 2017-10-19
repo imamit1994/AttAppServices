@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Bootstrap Example</title>
   <meta charset="utf-8"/>
@@ -8,6 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
   <style>
   h2 {
     text-align: center;
@@ -26,7 +27,8 @@
 </head>
 <body>  
 <div class="container">
-	<div id="codeofbuisnessconduct">
+	<form action="#" th:action="@{/cobconduct}" th:object="${representative}" method="post">
+	<div id="codeofbuisnessconduct" style="background-color:#ffffff;">
 	<div class="row">
 		<div class="col-sm-2"></div>
 		<div class="col-sm-8">
@@ -51,16 +53,15 @@
 	<div style="height:100px;"></div>
 	<div class="row">
 		<div class="col-sm-2"></div>
-		<div class="col-sm-8" style="border:1px solid;padding-top: 20px;padding-bottom: 30px;">
+		<div class="col-sm-8" style="border:1px solid;padding-top: 10px;padding-bottom: 30px;">
 			<h2>Restricted Proprietary Information</h2>
-			<span class="col-sm-2">Name(Printed):</span><input type="text" class="col-sm-10"/>
-			<!--<span class="col-sm-2">Signature:</span><input type="text" class="col-sm-6"><span class="col-sm-1">Date:</span><input type="text" class="col-sm-3">-->
-			<span class="col-sm-5">Temporary Worker/Contractor UUID:</span><input type="text" class="col-sm-7"/>
-			<span class="col-sm-4">Supervisor Name(Printed):</span><input type="text" class="col-sm-8"/>
-			<!--<span class="col-sm-3">Supervisor Signature:</span><input type="text" class="col-sm-5"><span class="col-sm-1">Date:</span><input type="text" class="col-sm-3"> -->
-			<span class="col-sm-2">Date:</span><input type="date" class="col-sm-10"/>
+			<span class="col-sm-2">Name(Printed):</span><input type="text" class="col-sm-10" th:field="*{name}"/>
+			<span class="col-sm-2">Date:</span><input type="text" class="col-sm-10" th:field="*{date}" id="date" placeholder="DD-MM-YYY" onchange="myFunction()"/>
+			<span class="col-sm-5">Temporary Worker/Contractor UUID:</span><input type="text" class="col-sm-7" th:field="*{uuid}"/>
+			<span class="col-sm-4">Supervisor Name(Printed):</span><input type="text" class="col-sm-8" th:field="*{supervisorName}"/>
 		</div>
 		<div class="col-sm-2"></div>
+	</div>
 	</div>
 	<div id="editor"></div>
 	<div class="row">
@@ -68,23 +69,51 @@
 		<div class="col-sm-8" style="text-align:center;padding-top:30px;"><input type="submit" value="I Acknowlodge" id="acknowledgement"/></div>
 		<div class="col-sm-2"></div>
 	</div>
-	</div>
+	</form>
 </div>
 <script>
-var doc = new jsPDF();
-var specialElementHandlers = {
-    '#editor': function (element, renderer) {
-        return true;
-    }
-};
-
-$('#acknowledgement').click(function () {   
-    doc.fromHTML($('#codeofbuisnessconduct').html(), 15, 15, {
-        'width': 170,
-            'elementHandlers': specialElementHandlers
-    });
-    doc.save('codeofbuinessconduct.pdf');
+function myFunction() {
+	try{
+	var x = $("#date").val();
+	var rgexp = /(^(((0[1-9]|1[0-9]|2[0-8])[-](0[1-9]|1[012]))|((29|30|31)[-](0[13578]|1[02]))|((29|30)[-](0[4,6,9]|11)))[-](19|[2-9][0-9])\d\d$)|(^29[-]02[-](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/;
+	var isValidDate = rgexp.test(x);
+	if(!isValidDate){
+		alert("please enter correct date and format in DD-MM-YYYY");
+	}
+	}
+	catch(e) {
+  		 alert("Error description: " + e.message);
+  	 }
+}
+$('#acknowledgement').click(function () {
+	html2canvas($('#codeofbuisnessconduct'), {
+	    onrendered: function (canvas) {
+	    	try{
+				var imgData = canvas.toDataURL("image/jpeg",1.0);
+			    var pdf = new jsPDF('p', 'mm', 'a4');
+			    pdf.addImage(imgData, 'JPEG', 5, 5,200,200);
+			    pdf.save("codeofbuinessconduct.pdf");
+	    	}
+	    	catch(e) {
+	   		 alert("Error description: " + e.message);
+	   	 }
+      }
+     });
 });
+/*$('#acknowledgement').click(function () {
+	html2canvas($('#codeofbuisnessconduct'), {
+	    onrendered: function (canvas) {
+	    	try {
+				var imgData = canvas.toDataURL("image/jpeg",1.0);
+			    var pdf = new jsPDF('p', 'mm', 'a4');
+			    pdf.addImage(imgData, 'JPEG', 5, 5,200,200);
+			    pdf.save("codeofbuinessconduct.pdf");
+			 } catch(e) {
+				 alert("Error description: " + e.message);
+			 }
+      }
+     });
+   });*/
 </script>
 </body>
 </html>
