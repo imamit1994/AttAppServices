@@ -1,9 +1,11 @@
 package attapp.services;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -13,10 +15,12 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 
+import attapp.model.Representative;
+
 @Service
 public class MongoDbConnection {
 	
-	public void inserIntoEmplyee(String name,String uuid, String supervisorName,String date){
+	public void inserIntoEmplyee(Representative r){
 		try{
 			
 			MongoClient client = new MongoClient("localhost",27017); //with default server and port adress
@@ -24,13 +28,13 @@ public class MongoDbConnection {
 			DB db = client.getDB( "employee" );
 			DBCollection collection = db.getCollection("employee");
 			BasicDBObject document = new BasicDBObject();
-			document.put("name",name);
-			document.put("uuid", uuid);
-			document.put("supervisorname", supervisorName);
-			document.put("date", date);
+			document.put("name",r.getName());
+			document.put("uuid", r.getUuid());
+			document.put("supervisorname", r.getSupervisorName());
+			document.put("date", r.getDate());
 			collection.insert(document);
-			Thread.sleep(1000);
-			savepdfIntoMongoDB(db,uuid);
+			Thread.sleep(1500);
+			savepdfIntoMongoDB(db,r);
 			client.close();
 	      }catch(Exception e){
 	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
@@ -47,9 +51,10 @@ public class MongoDbConnection {
 		getSinglepdf(db,uuid);
 		client.close();
 	}
-	private static void savepdfIntoMongoDB(DB db,String uuid) throws IOException {
-        String dbFileName = uuid;
-        File pdfFile = new File("c://Users/573010/Downloads/codeofbuinessconduct.pdf");
+	private static void savepdfIntoMongoDB(DB db,Representative r) throws IOException {
+        String dbFileName = r.getUuid();
+        //File pdfFile = new File("c://Users/573010/Downloads/codeofbuinessconduct.pdf");
+        File pdfFile = convert(r.getFiles());
         GridFS gfsPdf = new GridFS(db, "pdf");
         GridFSInputFile gfsFile = gfsPdf.createFile(pdfFile);
         gfsFile.setFilename(dbFileName);
@@ -73,4 +78,13 @@ public class MongoDbConnection {
 	        GridFS gfsPdf = new GridFS(db, "pdf");
 	        gfsPdf.remove(gfsPdf.findOne(dbFileName));
 	    }
+	 public static File convert(MultipartFile file) throws IOException
+	 {    
+	     File convFile = new File(file.getOriginalFilename());
+	     convFile.createNewFile(); 
+	     FileOutputStream fos = new FileOutputStream(convFile); 
+	     fos.write(file.getBytes());
+	     fos.close(); 
+	     return convFile;
+	 }
 }

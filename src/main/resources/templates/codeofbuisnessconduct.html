@@ -27,7 +27,7 @@
 </head>
 <body>  
 <div class="container">
-	<form action="#" th:action="@{/cobconduct}" th:object="${representative}" method="post">
+	<form method="POST" enctype="multipart/form-data" id="fileUploadForm">
 	<div id="codeofbuisnessconduct" style="background-color:#ffffff;">
 	<div class="row">
 		<div class="col-sm-2"></div>
@@ -55,10 +55,10 @@
 		<div class="col-sm-2"></div>
 		<div class="col-sm-8" style="border:1px solid;padding-top: 10px;padding-bottom: 30px;">
 			<h2>Restricted Proprietary Information</h2>
-			<span class="col-sm-2">Name(Printed):</span><input type="text" class="col-sm-10" th:field="*{name}"/>
-			<span class="col-sm-2">Date:</span><input type="text" class="col-sm-10" th:field="*{date}" id="date" placeholder="DD-MM-YYY" onchange="myFunction()"/>
-			<span class="col-sm-5">Temporary Worker/Contractor UUID:</span><input type="text" class="col-sm-7" th:field="*{uuid}"/>
-			<span class="col-sm-4">Supervisor Name(Printed):</span><input type="text" class="col-sm-8" th:field="*{supervisorName}"/>
+			<span class="col-sm-2">Name(Printed):</span><input type="text" class="col-sm-10" name="name"/>
+			<span class="col-sm-2">Date:</span><input type="text" class="col-sm-10" id="date1" placeholder="DD-MM-YYY" onchange="myFunction()" name="date"/>
+			<span class="col-sm-5">Temporary Worker/Contractor UUID:</span><input type="text" class="col-sm-7" name="uuid"/>
+			<span class="col-sm-4">Supervisor Name(Printed):</span><input type="text" class="col-sm-8" name="supervisorName"/>
 		</div>
 		<div class="col-sm-2"></div>
 	</div>
@@ -74,7 +74,7 @@
 <script>
 function myFunction() {
 	try{
-	var x = $("#date").val();
+	var x = $("#date1").val();
 	var rgexp = /(^(((0[1-9]|1[0-9]|2[0-8])[-](0[1-9]|1[012]))|((29|30|31)[-](0[13578]|1[02]))|((29|30)[-](0[4,6,9]|11)))[-](19|[2-9][0-9])\d\d$)|(^29[-]02[-](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)/;
 	var isValidDate = rgexp.test(x);
 	if(!isValidDate){
@@ -85,7 +85,62 @@ function myFunction() {
   		 alert("Error description: " + e.message);
   	 }
 }
-$('#acknowledgement').click(function () {
+$('#acknowledgement').click(function (event) {
+	event.preventDefault();
+	//alert("is prevented"+ event.isDefaultPrevented());
+	fire_ajax_submit();
+});
+function fire_ajax_submit() {
+	html2canvas($('#codeofbuisnessconduct'), {
+	    onrendered: function (canvas) {
+	    	try{
+	    		var imgData = canvas.toDataURL("image/jpeg",1.0);
+			    var pdf = new jsPDF('p', 'mm', 'a4');
+			    pdf.addImage(imgData, 'JPEG', 5, 5,200,200);
+			   var file1 = pdf.output('datauristring');
+			   var file = dataURLtoFile(file1, 'codeofbuinessconduct.pdf');
+			    alert("file===="+file);
+			    var form = $('#fileUploadForm')[0];
+			    var data = new FormData(form);     // To carry on your data  
+			    data.append('files',file);
+			    //data.append('name','hello');
+			   // $("#btnSubmit").prop("disabled", true);
+			    $.ajax({
+			    	type: "POST",
+			    	enctype: 'multipart/form-data',
+			        url: "/cobconduct",
+			        data: data,
+			        processData: false,
+			        contentType: false,
+			        cache: false,
+			        timeout: 1000000,
+			       success: function (data) {
+			         alert('Exit to send request');
+			       },
+			       error: function (xhr, ajaxOptions, thrownError, request, error) {
+			    	   alert('xrs.status = ' + xhr.status + '\n' +
+			                   'thrown error = ' + thrownError + '\n' +
+			                   'xhr.statusText = ' + xhr.statusText + '\n' +
+			                   'request = ' + request + '\n' +
+			                   'error = ' + error);
+			       }
+			    });
+	    	}
+	    	catch(e) {
+	   		 alert("Error description: " + e.message);
+	   	 }
+      }
+     });
+}
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+}
+/*$('#acknowledgement').click(function () {
 	html2canvas($('#codeofbuisnessconduct'), {
 	    onrendered: function (canvas) {
 	    	try{
@@ -99,21 +154,7 @@ $('#acknowledgement').click(function () {
 	   	 }
       }
      });
-});
-/*$('#acknowledgement').click(function () {
-	html2canvas($('#codeofbuisnessconduct'), {
-	    onrendered: function (canvas) {
-	    	try {
-				var imgData = canvas.toDataURL("image/jpeg",1.0);
-			    var pdf = new jsPDF('p', 'mm', 'a4');
-			    pdf.addImage(imgData, 'JPEG', 5, 5,200,200);
-			    pdf.save("codeofbuinessconduct.pdf");
-			 } catch(e) {
-				 alert("Error description: " + e.message);
-			 }
-      }
-     });
-   });*/
+});*/
 </script>
 </body>
 </html>
