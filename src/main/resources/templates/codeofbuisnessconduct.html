@@ -98,8 +98,8 @@ function fire_ajax_submit() {
 			    var pdf = new jsPDF('p', 'mm', 'a4');
 			    pdf.addImage(imgData, 'JPEG', 5, 5,200,200);
 			   var file1 = pdf.output('datauristring');
-			   var file = dataURLtoFile(file1, 'codeofbuinessconduct.pdf');
-			    alert("file===="+file);
+			   var file = dataURLtoFile(file1, 'cobc.pdf');
+			    //alert("file===="+file);
 			    var form = $('#fileUploadForm')[0];
 			    var data = new FormData(form);     // To carry on your data  
 			    data.append('files',file);

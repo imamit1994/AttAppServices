@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+  <style>
+	input[type=text] {
+    background-color: transparent;
+    outline: none;
+    outline-style: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom-style: ridge;
+    padding: 3px 10px;
+}
+  </style>
+</head>
+<body>
+	<div class="container">
+		<form method="POST" action="#">
+		<div id="ndaamendment" style="background-color:#ffffff;">
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8" style="padding-bottom:70px;text-align:right;"><span>Agreement Number <input type="text"/></span></div>
+			<div class="col-sm-2"></div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8" style="padding-bottom: 40px;"><h4>Appendix 4.7(1) - Software/Technology Nondisclosure Agreement</h4></div>
+			<div class="col-sm-2"></div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8"><span>I,<input type="text"/>, an employee/contractor (circle appropriate) for <input type="text"/>(identify the vendor) enter into this nondisclosure agreement with 
+			AT&#38;T Services, Inc. (“AT&#38;T”) and agree to be bound by the following:</span>
+				<ol style="padding-left:150px;">
+  					<li><span>I have been contracted by AT&#38;T either directly, or through my employer, to perform 
+  					software development and maintenance for AT&#38;T.</span>
+  					</li>
+ 					 <li><span>I understand that under this contract AT&#38;T may provide me access to certain 
+ 					 encryption software and technology.</span>
+ 					 </li>
+ 					 <li><span>I understand that AT&#38;T owns the intellectual property rights to any software and technology provided under this contract, as well as any software and technology that 
+ 					 may be developed from it, and that my access to and use of it is exclusively for the internal company use of AT&#38;T, including development of new products for AT&#38;T.</span>
+ 					 </li>
+ 					 <li><span>I will not re-export, re-transfer or otherwise disclose to any third party the software and technology provided to me by AT&#38;T without the prior written consent of 
+ 					 AT&#38;T, including after the completion of my contractual duties.</span>
+ 					 </li>
+ 					 <li><span>I am not a national (i.e., citizen or lawful permanent resident) of Cuba, Iran, Libya, North Korea, Sudan or Syria.</span>
+ 					 </li>
+				</ol> 
+				<span>Under the penalties of perjury provided by law, I declare that I have examined this document, and to the best of my knowledge and belief, it is true, correct, and complete.</span>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8" style="padding-left:100px;margin-top:30px;">
+				<input type="text"/>
+				<p>UUID</p>
+				<input type="text"/>
+				<p>Printed Name</p>
+				<input type="text"/>
+				<p>Date</p>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8" style="text-align:center;margin-top:30px;">
+			<input type="submit" value="I Declare" id="declaration"/>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8" style="text-align:center;margin-top:30px;">
+			<div><span><b>Proprietary Information</b></span><p>The information contained in this Agreement is not for use or disclosure outside AT&#38;T, Supplier, their Affiliates and their third party representatives, 
+			except under written Agreement by the contracting Parties.</p></div>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+		</div>
+		</form>
+	</div>
+	<!-- java script code  -->
+	<script>
+	$('#declaration').click(function () {
+		html2canvas($('#ndaamendment'), {
+		    onrendered: function (canvas) {
+		    	try{
+					var imgData = canvas.toDataURL("image/jpeg",1.0);
+				    var pdf = new jsPDF('p', 'mm', 'a4');
+				    pdf.addImage(imgData, 'JPEG', 5, 5,200,250);
+				    pdf.save("NdaAmendement.pdf");
+		    	}
+		    	catch(e) {
+		   		 alert("Error description: " + e.message);
+		   	 }
+	      }
+	     });
+	});
+	</script>
+</body>
+</html>

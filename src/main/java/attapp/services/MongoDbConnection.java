@@ -22,7 +22,7 @@ public class MongoDbConnection {
 	
 	public void inserIntoEmplyee(Representative r){
 		try{
-			
+			// Adding comments
 			MongoClient client = new MongoClient("localhost",27017); //with default server and port adress
 			System.out.println("Sucessfully connected with database");
 			DB db = client.getDB( "employee" );
