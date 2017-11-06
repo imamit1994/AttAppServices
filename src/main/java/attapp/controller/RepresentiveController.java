@@ -74,8 +74,9 @@ public class RepresentiveController {
 	  return new ResponseEntity<>(HttpStatus.OK);
 	}
 	@RequestMapping("/{uuid}")
-	public String operationOnDb(@PathVariable("uuid") String uuid) throws IOException{
+	public void operationOnDb(@PathVariable("uuid") String uuid) throws IOException{
 		mongo.mongooperation(uuid);
-		return "hello";
+		System.out.println("file deleted succesfully");
+		//return "saveform";
 	}
 }
